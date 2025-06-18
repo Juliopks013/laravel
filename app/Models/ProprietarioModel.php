@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LogAcesso extends Model
+class ProprietarioModel extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['log'];
+    protected $table = 'proprietario';
+    protected $fillable = ['id', 'nome', 'cpf', 'telefone', 'email'];
 }
