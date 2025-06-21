@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\AnuncioModel;
+use App\Models\ProprietarioModel;
+use App\Models\VeiculoModel;
 
 class AnuncioController extends Controller
 {
     function formulario() {
-        return view('anuncio-formulario');
+        $proprietarios = ProprietarioModel::all();
+        $veiculos = VeiculoModel::all();
+        return view('anuncio-formulario', compact('proprietarios', 'veiculos'));
     }
 
     function store(Request $dados){
@@ -42,10 +46,12 @@ class AnuncioController extends Controller
         return redirect()->route('anuncio-listar');
     }   
 
-    function editar($id){
-		$anuncio = AnuncioModel::find($id);
+    function editar($id) {
+    $anuncio = AnuncioModel::find($id);
+    $veiculos = \App\Models\VeiculoModel::all();
+    $proprietarios = \App\Models\ProprietarioModel::all();
 
-        return view('anuncio-formulario', ['anuncio' => $anuncio]);
-        
-    }
+    return view('anuncio-formulario', compact('anuncio', 'veiculos', 'proprietarios'));
+}
+
 }

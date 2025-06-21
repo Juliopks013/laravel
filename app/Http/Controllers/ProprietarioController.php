@@ -45,7 +45,7 @@ class ProprietarioController extends Controller
     function editar($id){
 		$proprietario = ProprietarioModel::find($id);
 
-        return view('proprietario-formulario', ['proprietario' => $veiculo]);
+        return view('proprietario-formulario', ['proprietario' => $proprietario]);
         
     }
 }
