@@ -13,7 +13,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        return Post::with('user')->orderBy('created_at', 'desc')->get();
+
     }
 
     /**
@@ -29,7 +30,19 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $dados = $request->validate([
+            'description' => 'required|string|max:255',
+            'picture' => 'nullable|string|max:255'
+        ]);
+
+        $post = Post::create([
+            'description' => $dados['description'],
+            'picture' => $dados['picture'] ?? '',
+            'data' => now()->format('Y-m-d H:i:s'),
+            'user_id' => $request->user()->id
+        ]);
+        
+        return response()->json($post, 201);
     }
 
     /**

@@ -26,5 +26,8 @@ Route::prefix('usuario')-> group(function(){
     Route::post('foto-upload', [App\Http\Controllers\UsuarioController::class, 'fotoUpload']);
     Route::post('editar', [App\Http\Controllers\UsuarioController::class, 'editar']);
     Route::post('perfil', [App\Http\Controllers\UsuarioController::class, 'perfil']);
+
+    Route::get('/posts', [PostController::class, 'index']);
+    Route::post('/posts', [PostController::class, 'store']);
 });
 

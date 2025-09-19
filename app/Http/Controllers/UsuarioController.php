@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
 {
-   
-    function registrar(Request $request) 
+    public function registrar(Request $request) 
     {
         $dados = $request->validate([
             'name' => 'required|string|max:255',
@@ -22,18 +20,25 @@ class UsuarioController extends Controller
         $dados['status'] = 'active';
         $dados['enabled'] = true;
 
-        $usuario = User::create($dados);
+        try {
+            $usuario = User::create($dados);
+            $token = $usuario->createToken('auth_token')->plainTextToken;
 
-        $token = $usuario->createToken('auth_token')->plainTextToken;
+            return response()->json([
+                'message' => 'Usuário registrado com sucesso.',
+                'user' => $usuario,
+                'token' => $token
+            ], 201);
 
-        return response()->json([
-            'message' => 'Usuário registrado com sucesso.',
-            'user' => $usuario,
-            'token' => $token
-        ], 201);    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao registrar o usuário.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    function login(Request $request)
+    public function login(Request $request)
     {
         $credenciais = $request->validate([
             'email' => 'required|email',
@@ -55,16 +60,14 @@ class UsuarioController extends Controller
         ]);
     }
 
-
-    function logout(Request $request)
+    public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logout realizado com sucesso.']);
     }
 
-
-    function fotoUpload(Request $request)
+    public function fotoUpload(Request $request)
     {
         $request->validate([
             'picture' => 'required|image|mimes:jpg,jpeg,png|max:2048'
@@ -81,8 +84,7 @@ class UsuarioController extends Controller
         ]);
     }
 
-
-    function desativarConta(Request $request)
+    public function desativarConta(Request $request)
     {
         $usuario = $request->user();
         $usuario->update(['enabled' => false, 'status' => 'inactive']);
@@ -90,12 +92,12 @@ class UsuarioController extends Controller
         return response()->json(['message' => 'Conta desativada com sucesso.']);
     }
 
-    function perfil(Request $request)
+    public function perfil(Request $request)
     {
         return response()->json($request->user());
     }
 
-    function editar(Request $request)
+    public function editar(Request $request)
     {
         $usuario = $request->user();
 
