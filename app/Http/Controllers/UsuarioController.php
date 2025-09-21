@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
@@ -47,7 +48,7 @@ class UsuarioController extends Controller
 
         $usuario = User::where('email', $credenciais['email'])->first();
 
-        if (!$usuario || !\Hash::check($credenciais['password'], $usuario->password)) {
+        if (!$usuario || !Hash::check($credenciais['password'], $usuario->password)) {
             return response()->json(['message' => 'Credenciais inválidas'], 401);
         }
 
@@ -94,7 +95,8 @@ class UsuarioController extends Controller
 
     public function perfil(Request $request)
     {
-        return response()->json($request->user());
+        $usuario = $request->user();
+        return response()->json($usuario);
     }
 
     public function editar(Request $request)

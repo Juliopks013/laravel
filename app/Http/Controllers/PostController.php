@@ -40,9 +40,8 @@ class PostController extends Controller
             'picture' => $dados['picture'] ?? '',
             'data' => now()->format('Y-m-d H:i:s'),
             'user_id' => $request->user()->id
-        ]);
-        
-        return response()->json($post, 201);
+        ]); 
+        return response()->json(Post::with('user')->find($post->id), 201);
     }
 
     /**

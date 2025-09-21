@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,20 +16,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+    Route::prefix('usuario')->group(function() {
+        Route::post('registrar-se', [UsuarioController::class, 'registrar']);
+        Route::post('login', [UsuarioController::class, 'login']);
+
+    Route::middleware('auth:sanctum')->group(function() {
+        Route::post('logout', [UsuarioController::class, 'logout']);
+        Route::post('perfil', [UsuarioController::class, 'perfil']);
+        Route::post('editar', [UsuarioController::class, 'editar']);
+        Route::post('desativar-conta', [UsuarioController::class, 'desativarConta']);
+        Route::post('foto-upload', [UsuarioController::class, 'fotoUpload']);
+        Route::get('posts', [PostController::class, 'index']);
+        Route::post('posts', [PostController::class, 'store']);
+    });
 });
 
-Route::prefix('usuario')-> group(function(){
-    Route::post('registrar-se', [App\Http\Controllers\UsuarioController::class, 'registrar']);
-    Route::post('login', [App\Http\Controllers\UsuarioController::class, 'login']);
-    Route::post('logout', [App\Http\Controllers\UsuarioController::class, 'logout']);
-    Route::post('desativar-conta', [App\Http\Controllers\UsuarioController::class, 'desativarConta']);
-    Route::post('foto-upload', [App\Http\Controllers\UsuarioController::class, 'fotoUpload']);
-    Route::post('editar', [App\Http\Controllers\UsuarioController::class, 'editar']);
-    Route::post('perfil', [App\Http\Controllers\UsuarioController::class, 'perfil']);
 
-    Route::get('/posts', [PostController::class, 'index']);
-    Route::post('/posts', [PostController::class, 'store']);
-});
+
 
