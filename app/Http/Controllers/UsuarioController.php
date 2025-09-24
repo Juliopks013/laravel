@@ -30,7 +30,6 @@ class UsuarioController extends Controller
                 'user' => $usuario,
                 'token' => $token
             ], 201);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erro ao registrar o usuário.',
@@ -64,7 +63,6 @@ class UsuarioController extends Controller
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-
         return response()->json(['message' => 'Logout realizado com sucesso.']);
     }
 
@@ -76,13 +74,14 @@ class UsuarioController extends Controller
 
         $usuario = $request->user();
         $path = $request->file('picture')->store('pictures', 'public');
-
-        $usuario->update(['picture' => $path]);
+        $url = asset('storage/' . $path); // Garante URL completa
+        $usuario->update(['picture' => $url]); // Salva a URL completa no banco
 
         return response()->json([
             'message' => 'Foto enviada com sucesso.',
-            'picture_url' => asset('storage/' . $path)
+            'picture_url' => $url
         ]);
+
     }
 
     public function desativarConta(Request $request)
@@ -95,13 +94,16 @@ class UsuarioController extends Controller
 
     public function perfil(Request $request)
     {
-        $usuario = $request->user();
-        return response()->json($usuario);
+        return response()->json($request->user());
     }
 
-    public function editar(Request $request)
+    public function editar(Request $request, $id)
     {
-        $usuario = $request->user();
+        $usuario = User::findOrFail($id);
+
+        if ($request->user()->id !== $usuario->id) {
+            return response()->json(['message' => 'Acesso negado.'], 403);
+        }
 
         $dados = $request->validate([
             'name' => 'sometimes|string|max:255',
@@ -118,7 +120,7 @@ class UsuarioController extends Controller
         $usuario->update($dados);
 
         return response()->json([
-            'message' => 'Dados atualizados com sucesso.',
+            'message' => 'Dados atualizados com sucesso. :)',
             'user' => $usuario
         ]);
     }

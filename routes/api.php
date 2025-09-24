@@ -17,16 +17,17 @@ use App\Http\Controllers\PostController;
 */
 
 
-    Route::prefix('usuario')->group(function() {
-        Route::post('registrar-se', [UsuarioController::class, 'registrar']);
-        Route::post('login', [UsuarioController::class, 'login']);
+Route::prefix('usuario')->group(function() {
+    Route::post('registrar-se', [UsuarioController::class, 'registrar']);
+    Route::post('login', [UsuarioController::class, 'login']);
 
     Route::middleware('auth:sanctum')->group(function() {
         Route::post('logout', [UsuarioController::class, 'logout']);
-        Route::post('perfil', [UsuarioController::class, 'perfil']);
-        Route::post('editar', [UsuarioController::class, 'editar']);
+        Route::get('perfil', [UsuarioController::class, 'perfil']);
+        Route::put('{id}', [UsuarioController::class, 'editar']);
         Route::post('desativar-conta', [UsuarioController::class, 'desativarConta']);
         Route::post('foto-upload', [UsuarioController::class, 'fotoUpload']);
+
         Route::get('posts', [PostController::class, 'index']);
         Route::post('posts', [PostController::class, 'store']);
     });
