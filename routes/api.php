@@ -27,6 +27,8 @@ Route::prefix('usuario')->group(function() {
         Route::put('{id}', [UsuarioController::class, 'editar']);
         Route::post('desativar-conta', [UsuarioController::class, 'desativarConta']);
         Route::post('foto-upload', [UsuarioController::class, 'fotoUpload']);
+        Route::delete('posts/{id}', [PostController::class, 'destroy']);
+
 
         Route::get('posts', [PostController::class, 'index']);
         Route::post('posts', [PostController::class, 'store']);
